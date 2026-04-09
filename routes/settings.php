@@ -23,7 +23,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('user-password.update');
 
     Route::get('settings/appearance', function () {
-        return Inertia::render('settings/appearance');
+        return view('settings.appearance');
     })->name('appearance.edit');
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])

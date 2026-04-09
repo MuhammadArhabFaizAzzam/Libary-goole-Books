@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Book;
-use App\Models\Borrowing;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -60,7 +59,7 @@ class User extends Authenticatable
      */
     public function borrowings(): HasMany
     {
-        return $this->hasMany(Borrowing::class);
+        return $this->hasMany(Book::class);
     }
 
     public function savedBooks()

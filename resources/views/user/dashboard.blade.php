@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - E-Library</title>
-    @vite(['resources/css/app.css', 'resources/js/app.tsx'])
+@vite(['resources/css/app.css'])
 </head>
 <body class="min-h-screen bg-gray-50 dark:bg-gray-900">
     
@@ -40,7 +40,7 @@
                 <a href="{{ route('library.books') }}" class="px-3 md:px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                     Browse
                 </a>
-                <a href="{{ route('library.my-books') }}" class="px-3 md:px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <a href="{{ route('library.my.books') }}" class="px-3 md:px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
                     My Books
                 </a>
 @if(Auth::user()->role === 'admin')
@@ -86,11 +86,11 @@
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         @foreach($availableBooks as $book)
                             <div class="group">
-                                <a href="{{ route('library.book.detail', ['id' => $book->mangadex_id ?? $book->id]) }}" class="block">
+                                <a href="{{ route('library.book.detail', $book->google_id) }}" class="block">
                                     <div class="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all group-hover:-translate-y-1 h-full">
                                         <div class="aspect-[2/3] relative bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-800 dark:to-gray-700 overflow-hidden">
-                                            @if($book->cover_url)
-                                                <img src="{{ $book->cover_url }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy"/>
+                                            @if($book->thumbnail)
+                                                <img src="{{ $book->thumbnail }}" alt="{{ $book->title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy"/>
                                             @else
                                                 <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-400 to-pink-500">
                                                     <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -101,7 +101,7 @@
                                         </div>
                                         <div class="p-3">
                                             <h3 class="font-semibold text-sm line-clamp-2 text-gray-900 dark:text-white mb-1">{{ $book->title }}</h3>
-                                            <p class="text-xs text-gray-500">{{ $book->author }}</p>
+                                            <p class="text-xs text-gray-500">{{ $book->authors ? collect($book->authors)->take(2)->implode(', ') : 'Penulis Tidak Diketahui' }}</p>
                                         </div>
                                     </div>
                                 </a>
@@ -133,13 +133,13 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
                                                 <div class="flex-shrink-0 h-12 w-9">
-                                                    @if($borrowing->book->cover_url)
-                                                        <img class="h-12 w-9 rounded-lg object-cover" src="{{ $borrowing->book->cover_url }}" alt="">
+                                                    @if($borrowing->book->thumbnail)
+                                                        <img class="h-12 w-9 rounded-lg object-cover" src="{{ $borrowing->book->thumbnail }}" alt="">
                                                     @endif
                                                 </div>
                                                 <div class="ml-4">
                                                     <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $borrowing->book->title }}</div>
-                                                    <div class="text-sm text-gray-500">{{ $borrowing->book->author }}</div>
+                                                    <div class="text-sm text-gray-500">{{ $borrowing->book->authors ? collect($borrowing->book->authors)->take(1)->implode(', ') : 'Penulis Tidak Diketahui' }}</div>
                                                 </div>
                                             </div>
                                         </td>

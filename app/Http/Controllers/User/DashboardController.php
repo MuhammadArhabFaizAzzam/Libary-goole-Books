@@ -11,7 +11,7 @@ class DashboardController extends Controller
     {
 $user = auth()->user();
         
-        $availableBooks = \App\Models\Book::inRandomOrder()->take(6)->get();
+$availableBooks = \App\Models\Book::inRandomOrder()->take(6)->get();
         $borrowings = collect([]); // Placeholder - Borrowing model belum dibuat
         
         return view('user.dashboard', compact('availableBooks', 'borrowings'));

@@ -1,4 +1,6 @@
-@extends('user.dashboard')
+@extends('layouts.library')
+
+@section('title', 'Beranda Library | E-Library')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -32,17 +34,21 @@
         </form>
     </div>
 
-    @if($books->count() > 0)
+@if(count($books) > 0)
     {{-- Recent Search Results --}}
     <section class="mb-20">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">Hasil Pencarian</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
             @foreach($books as $book)
             <div class="group">
+                @if(isset($book['google_id']) && $book['google_id'])
                 <a href="{{ route('library.book.detail', $book['google_id']) }}" class="block">
+                @else
+                <div class="block">
+                @endif
                     <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group-hover:-translate-y-2 h-full border-2 border-gray-100 dark:border-gray-700 group-hover:border-purple-300">
                         <div class="aspect-[2/3] relative overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
-                            @if($book['thumbnail'])
+@if(isset($book['thumbnail']) && $book['thumbnail'])
                                 <img src="{{ $book['thumbnail'] }}" alt="{{ $book['title'] }}" 
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                                      loading="lazy"/>
@@ -69,7 +75,11 @@
                             @endif
                         </div>
                     </div>
+                @if(isset($book['google_id']) && $book['google_id'])
                 </a>
+                @else
+                </div>
+                @endif
             </div>
             @endforeach
         </div>

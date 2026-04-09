@@ -1,4 +1,6 @@
-@extends('user.dashboard')
+@extends('layouts.library')
+
+@section('title', 'Cari Buku | E-Library')
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -18,20 +20,24 @@
     <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
         <div>
             <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Hasil untuk "{{ request('q') }}"</h1>
-            <p class="text-gray-600 dark:text-gray-400 mt-2">{{ $books->count() }} buku ditemukan</p>
+            <p class="text-gray-600 dark:text-gray-400 mt-2">{{ count($books) }} buku ditemukan</p>
         </div>
         <a href="{{ route('library.home') }}" class="mt-4 md:mt-0 px-6 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl hover:shadow-md transition-all text-gray-900 dark:text-white">
             ← Kembali ke Beranda
         </a>
     </div>
 
-    @if($books->count() > 0)
+    @if(count($books) > 0)
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach($books as $book)
         <article class="group bg-white dark:bg-gray-800 rounded-3xl shadow-xl hover:shadow-2xl transition-all border border-gray-100 dark:border-gray-700 overflow-hidden">
+            @if(isset($book['google_id']) && $book['google_id'])
             <a href="{{ route('library.book.detail', $book['google_id']) }}" class="block">
+            @else
+            <div class="block">
+            @endif
                 <div class="aspect-[2/3] relative overflow-hidden">
-                    @if($book['thumbnail'])
+                    @if(isset($book['thumbnail']) && $book['thumbnail'])
                         <img src="{{ $book['thumbnail'] }}" alt="{{ $book['title'] }}" 
                              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                              loading="lazy"/>
@@ -43,17 +49,25 @@
                         </div>
                     @endif
                 </div>
+            @if(isset($book['google_id']) && $book['google_id'])
             </a>
+            @else
+            </div>
+            @endif
             
             <div class="p-8">
+                @if(isset($book['google_id']) && $book['google_id'])
                 <a href="{{ route('library.book.detail', $book['google_id']) }}">
                     <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-purple-600 transition-colors">{{ $book['title'] }}</h2>
                 </a>
+                @else
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">{{ $book['title'] }}</h2>
+                @endif
                 
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">Penulis</p>
                     <p class="text-gray-900 dark:text-white line-clamp-1">
-                        @if(!empty($book['authors']))
+                        @if(isset($book['authors']) && !empty($book['authors']))
                             {{ collect($book['authors'])->take(3)->implode(', ') }}
                             @if(count($book['authors']) > 3)...@endif
                         @else
@@ -62,13 +76,13 @@
                     </p>
                 </div>
 
-                @if($book['publisher'] || $book['published_year'])
+                @if(isset($book['publisher']) || isset($book['published_year']))
                 <div class="mb-4">
                     <p class="text-sm text-gray-500 dark:text-gray-400">{{ $book['publisher'] ?? '' }} • {{ $book['published_year'] ?? '' }}</p>
                 </div>
                 @endif
 
-                @if($book['page_count'])
+                @if(isset($book['page_count']) && $book['page_count'])
                 <div class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-6">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -78,11 +92,17 @@
                 @endif
 
                 <div class="flex gap-3">
+                    @if(isset($book['google_id']) && $book['google_id'])
                     <a href="{{ route('library.book.detail', $book['google_id']) }}" 
                        class="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 px-6 rounded-xl font-bold text-center hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
                         Baca Detail
                     </a>
-                    @if($book['preview_link'])
+                    @else
+                    <button disabled class="flex-1 bg-gray-400 text-white py-4 px-6 rounded-xl font-bold text-center cursor-not-allowed">
+                        No Detail
+                    </button>
+                    @endif
+                    @if(isset($book['preview_link']) && $book['preview_link'])
                     <a href="{{ $book['preview_link'] }}" target="_blank" rel="noopener" 
                        class="p-4 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all shadow-md hover:shadow-lg">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

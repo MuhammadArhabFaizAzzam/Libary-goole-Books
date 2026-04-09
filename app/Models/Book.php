@@ -34,14 +34,14 @@ class Book extends Model
         return $this->belongsToMany(User::class, 'book_user_saves');
     }
 
-    public static function findOrCreateFromGoogle($volumeInfo, GoogleBooksService $service)
+    public static function findOrCreateFromGoogle($item, GoogleBooksService $service)
     {
-        $googleId = $volumeInfo['id'] ?? null;
+        $googleId = $item['id'] ?? $item['volumeInfo']['id'] ?? null;
         if (!$googleId) return null;
 
         return self::updateOrCreate(
             ['google_id' => $googleId],
-            $service->formatBook($volumeInfo)
+            $service->formatBook($item)
         );
     }
 }

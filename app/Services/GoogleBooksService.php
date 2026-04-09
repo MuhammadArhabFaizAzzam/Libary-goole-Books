@@ -51,8 +51,7 @@ class GoogleBooksService
             ]);
 
             if ($response->successful()) {
-                $volume = $response->json();
-                return $volume['volumeInfo'] ?? null;
+                return $response->json();
             }
 
             Log::error('Google Books detail error: ' . $response->body());
@@ -63,20 +62,40 @@ class GoogleBooksService
     /**
      * Format book data for model
      */
-    public function formatBook(array $volumeInfo): array
+    public function formatBook(array $item): array
     {
+        $volumeInfo = $item['volumeInfo'] ?? $item;
+        $id = $item['id'] ?? $volumeInfo['id'] ?? null;
+
+        $publishedYear = null;
+        if (isset($volumeInfo['publishedDate'])) {
+            // Ambil tahun dari publishedDate (misal '2020-01-01' -> 2020)
+            $publishedYear = (int) substr($volumeInfo['publishedDate'], 0, 4);
+        }
+
+        $isbn13 = null;
+        if (isset($volumeInfo['industryIdentifiers'])) {
+            foreach ($volumeInfo['industryIdentifiers'] as $identifier) {
+                if (($identifier['type'] ?? '') === 'ISBN_13') {
+                    $isbn13 = $identifier['identifier'] ?? null;
+                    break;
+                }
+            }
+        }
+
         return [
-            'google_id' => $volumeInfo['id'] ?? null,
+            'google_id' => $id,
             'title' => $volumeInfo['title'] ?? 'Unknown Title',
-            'subtitle' => $volumeInfo['subtitle'] ?? null,
             'authors' => $volumeInfo['authors'] ?? [],
             'description' => $volumeInfo['description'] ?? null,
-            'page_count' => $volumeInfo['pageCount'] ?? null,
-            'published_date' => $volumeInfo['publishedDate'] ?? null,
-            'publisher' => $volumeInfo['publisher'] ?? null,
             'thumbnail' => $this->getThumbnailUrl($volumeInfo),
+            'page_count' => $volumeInfo['pageCount'] ?? null,
+            'isbn_13' => $isbn13,
+            'publisher' => $volumeInfo['publisher'] ?? null,
+            'published_year' => $publishedYear,
             'preview_link' => $volumeInfo['previewLink'] ?? null,
             'info_link' => $volumeInfo['infoLink'] ?? null,
+            'subtitle' => $volumeInfo['subtitle'] ?? null,
         ];
     }
 

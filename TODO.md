@@ -1,18 +1,3 @@
-# TODO - Library Google Books ✅
+# TODO: Convert to Full Blade Library
 
-✅ 1. GoogleBooksService.php dibuat  
-✅ 2. Book model + migrations (books, book_user_saves) + migrate  
-✅ 3. LibraryController.php dibuat  
-✅ 4. routes/web.php diupdate + route:clear  
-✅ 5. resources/views/library/home.blade.php dibuat  
-✅ 6. resources/views/library/books.blade.php dibuat  
-✅ 7. resources/views/library/book-detail.blade.php dibuat  
-
-⏳ 8. Update user/dashboard.blade.php (integrasi link)  
-⏳ 9. Test: php artisan serve, login → /library  
-⏳ 10. Done & cleanup
-
-Library siap digunakan! Login dan coba search di /library. Fitur save buku juga ada.
-
-**Test command:** `php artisan serve` lalu buka http://127.0.0.1:8000/library (pastikan sudah login)
-
+- [x] Fix count() error in library/home.blade.php (array -> count($books))\n- [x] Fix count() error in library/books.blade.php\n- [x] Add myBooks() method to LibraryController.php\n- [x] Add my-books route to web.php\n- [x] Create library/my-books.blade.php\n- [x] Delete unused React library pages (resources/js/pages/library/*)\n- [ ] Test all library pages\n- [ ] php artisan route:cache & npm run build\n- [ ] Complete
