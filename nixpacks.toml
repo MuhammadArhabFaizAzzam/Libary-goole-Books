@@ -7,11 +7,6 @@ nixpkgs = ["php84", "php84Extensions.curl", "php84Extensions.zip", "php84Extensi
 [phases.build]
 cmds = [
   "composer install --optimize-autoloader --no-dev",
-  "php artisan config:cache",
-  "php artisan route:cache",
   "npm ci",
   "npm run build"
 ]
-
-[phases.start]
-cmd = "php artisan serve --host=0.0.0.0 --port=$PORT"
