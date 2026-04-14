@@ -11,6 +11,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Features;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Actions\ConfirmPassword;
+use Laravel\Fortify\Contracts\ConfirmPasswordViewResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -30,6 +32,10 @@ class FortifyServiceProvider extends ServiceProvider
         $this->configureActions();
         $this->configureViews();
         $this->configureRateLimiting();
+
+        // Update Fortify HOME constant
+        Fortify::redirects('login', '/library');
+        Fortify::redirects('register', '/library');
     }
 
     /**

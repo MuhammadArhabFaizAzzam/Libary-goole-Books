@@ -50,7 +50,7 @@
             </div>
         </div>
 
-        <div class="rounded-[2rem] bg-gradient-to-br from-violet-600 to-fuchsia-600 p-1 shadow-2xl shadow-violet-500/20">
+        <div class="rounded-4xl bg-gradient-to-br from-violet-600 to-fuchsia-600 p-1 shadow-2xl shadow-violet-500/20">
             <div class="h-full rounded-[1.75rem] bg-slate-950 p-8 text-white shadow-xl sm:p-10">
                 <div class="mb-8 inline-flex items-center gap-3 rounded-full bg-white/10 px-4 py-2 text-xs uppercase tracking-[0.25em] text-slate-100/80">
                     <span class="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
